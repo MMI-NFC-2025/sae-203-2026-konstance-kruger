@@ -1,8 +1,27 @@
 ---
-import Header from "../components/Header.astro";
 import Layout from '../layouts/Layout.astro';
+import PocketBase from 'pocketbase';
 
+const pb = new PocketBase('http://127.0.0.1:8090');
+
+const programme = await pb.collection('programme').getFullList({
+  sort: 'date',
+  expand: 'artiste,scene'
+});
 ---
-<Layout titre="Accueil">
-    <h1>Accueil</h1> <!-- ou "Offres" pour la page des offres -->
+
+<Layout titre="Programme">
+  <section class="px-6 py-12">
+    <h1 class="mb-6 text-4xl font-bold">Programme</h1>
+
+    <div class="space-y-4">
+      {programme.map((item) => (
+        <article class="rounded-xl border p-4">
+          <h2 class="text-xl font-semibold">{item.expand?.artiste?.nom}</h2>
+          <p>Scène : {item.expand?.scene?.nom}</p>
+          <p>Date : {new Date(item.date).toLocaleString('fr-FR')}</p>
+        </article>
+      ))}
+    </div>
+  </section>
 </Layout>

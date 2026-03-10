@@ -1,0 +1,25 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout titre="Contact">
+  <section class="px-6 py-12">
+    <h1 class="mb-6 text-4xl font-bold">Contact</h1>
+
+    <form class="max-w-2xl space-y-4">
+      <input type="text" placeholder="Nom" class="w-full rounded border p-3" />
+      <input type="email" placeholder="Email" class="w-full rounded border p-3" />
+      <input type="text" placeholder="Sujet" class="w-full rounded border p-3" />
+      <textarea placeholder="Message" rows="6" class="w-full rounded border p-3"></textarea>
+      <button type="submit" class="rounded bg-black px-5 py-3 text-white">
+        Envoyer
+      </button>
+    </form>
+
+    <div class="mt-10 space-y-2">
+      <p>Email : contact@lesrivesduterritoire.fr</p>
+      <p>Téléphone : 01 23 45 67 89</p>
+      <p>Adresse : 12 quai du festival, 75000 Paris</p>
+    </div>
+  </section>
+</Layout>

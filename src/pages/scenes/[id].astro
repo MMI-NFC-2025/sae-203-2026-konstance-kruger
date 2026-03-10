@@ -1,0 +1,34 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import PocketBase from 'pocketbase';
+
+const pb = new PocketBase('http://127.0.0.1:8090');
+const { id } = Astro.params;
+
+const scene = await pb.collection('scenes').getOne(id);
+
+const programmeScene = await pb.collection('programme').getFullList({
+  filter: `scene = "${id}"`,
+  sort: 'date',
+  expand: 'artiste'
+});
+---
+
+<Layout titre={scene.nom}>
+  <section class="px-6 py-12">
+    <h1 class="mb-4 text-4xl font-bold">{scene.nom}</h1>
+    <p class="mb-2">{scene.description}</p>
+    <p class="mb-8">Capacité : {scene.capacite}</p>
+
+    <section>
+      <h2 class="mb-4 text-2xl font-semibold">Artistes sur cette scène</h2>
+      <ul class="space-y-3">
+        {programmeScene.map((item) => (
+          <li class="rounded-xl border p-4">
+            {item.expand?.artiste?.nom} — {new Date(item.date).toLocaleString('fr-FR')}
+          </li>
+        ))}
+      </ul>
+    </section>
+  </section>
+</Layout>

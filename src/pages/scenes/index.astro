@@ -1,0 +1,25 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import PocketBase from 'pocketbase';
+
+const pb = new PocketBase('http://127.0.0.1:8090');
+
+const scenes = await pb.collection('scenes').getFullList({
+  sort: 'nom'
+});
+---
+
+<Layout titre="Scènes">
+  <section class="px-6 py-12">
+    <h1 class="mb-6 text-4xl font-bold">Scènes</h1>
+
+    <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+      {scenes.map((scene) => (
+        <a href={`/scenes/${scene.id}`} class="rounded-xl border p-4 hover:shadow">
+          <h2 class="text-xl font-semibold">{scene.nom}</h2>
+          <p class="mt-2 text-sm text-gray-600">Capacité : {scene.capacite}</p>
+        </a>
+      ))}
+    </div>
+  </section>
+</Layout>

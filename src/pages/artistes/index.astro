@@ -1,0 +1,25 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import PocketBase from 'pocketbase';
+
+const pb = new PocketBase('http://127.0.0.1:8090');
+
+const artistes = await pb.collection('artistes').getFullList({
+  sort: 'nom'
+});
+---
+
+<Layout titre="Artistes">
+  <section class="px-6 py-12">
+    <h1 class="mb-6 text-4xl font-bold">Artistes</h1>
+
+    <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+      {artistes.map((artiste) => (
+        <a href={`/artistes/${artiste.id}`} class="rounded-xl border p-4 hover:shadow">
+          <h2 class="text-xl font-semibold">{artiste.nom}</h2>
+          <p class="mt-2 text-sm text-gray-600">{artiste.genre_musical}</p>
+        </a>
+      ))}
+    </div>
+  </section>
+</Layout>

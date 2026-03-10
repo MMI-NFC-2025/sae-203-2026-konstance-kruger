@@ -1,11 +1,56 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import Header from "../components/Header.astro";
 import PocketBase from 'pocketbase';
 
 const pb = new PocketBase('http://127.0.0.1:8090');
+
+const artistes = await pb.collection('artistes').getFullList({
+  sort: 'nom'
+});
+
+const scenes = await pb.collection('scenes').getFullList({
+  sort: 'nom'
+});
+
+const programme = await pb.collection('programme').getFullList({
+  sort: 'date',
+  expand: 'artiste,scene'
+});
 ---
 
 <Layout titre="Accueil">
-    <h1>Les rives du territoire 2026</h1> 
+    <section 
+    class="h-[70vh] text-white text-center bg-cover bg-no-repeat"
+    style="background-image: url('/hero.svg'); background-position: center 35%;"
+    >
+      <section class="px-6 py-12">
+    <h1 class="mb-4 text-4xl font-bold text-white">Les rives du territoire</h1>
+        <h1 class="mb-4 text-4xl font-bold text-blue-300"> 2026</h1>
+    <p class="mb-6 max-w-2xl">
+      Festival de musique au bord de l’eau, entre scène, nature et découvertes artistiques.
+    </p>
+    <a href="/programme" class="inline-block rounded bg-black px-5 py-3 text-white">
+      Voir le programme
+    </a>
+  </section>
+    <section class="px-6 py-10">
+        <h2 class="mb-4 text-2xl font-semibold">Programme</h2>
+    <ul class="space-y-3">
+      {programme.map((item) => (
+        <li>
+          {item.expand?.artiste?.nom} — {item.expand?.scene?.nom} — {new Date(item.date).toLocaleString('fr-FR')}
+        </li>
+      ))}
+    </ul>
+
+    <h2 class="mb-4 text-2xl font-semibold">Artistes</h2>
+    <ul class="mb-10 space-y-2">
+      {artistes.map((artiste) => (
+        <li>
+          {artiste.nom} — {artiste.genre_musical}
+        </li>
+      ))}
+    </ul>
+
+  </section>
 </Layout>
