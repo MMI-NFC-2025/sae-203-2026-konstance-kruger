@@ -2,7 +2,7 @@
 import Layout from '../../layouts/Layout.astro';
 import PocketBase from 'pocketbase';
 
-const pb = new PocketBase('http://127.0.0.1:8090');
+const pb = new PocketBase('https://sae203.kkruger.fr:443');
 const { id } = Astro.params;
 
 const scene = await pb.collection('scenes').getOne(id);
@@ -49,7 +49,7 @@ function getDayKey(dateValue: string | number | Date): string {
 function getImageUrl(scene: any): string | null {
   const imageField = scene.photo_scene || scene.image;
   if (imageField) {
-    return `http://127.0.0.1:8090/api/files/scenes/${scene.id}/${imageField}`;
+    return `https://sae203.kkruger.fr:443/api/files/scenes/${scene.id}/${imageField}`;
   }
   return null;
 }

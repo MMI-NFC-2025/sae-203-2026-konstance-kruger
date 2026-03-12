@@ -2,7 +2,7 @@
 import Layout from '../../layouts/Layout.astro';
 import PocketBase from 'pocketbase';
 
-const pb = new PocketBase('http://127.0.0.1:8090');
+const pb = new PocketBase('https://sae203.kkruger.fr:443');
 const { id } = Astro.params;
 
 const artiste = await pb.collection('artistes').getOne(id);
@@ -27,7 +27,7 @@ function formatDatePassageFull(dateValue: string | number | Date): string {
 function getImageUrl(artiste: any): string | null {
   const imageField = artiste.photo_artiste;
   if (imageField) {
-    return `http://127.0.0.1:8090/api/files/artistes/${artiste.id}/${imageField}`;
+    return `https://sae203.kkruger.fr:443/api/files/artistes/${artiste.id}/${imageField}`;
   }
   return null;
 }
@@ -37,10 +37,10 @@ function getGalerieUrls(artiste: any): string[] {
   if (artiste.gallerie_photo) {
     if (Array.isArray(artiste.gallerie_photo)) {
       artiste.gallerie_photo.forEach((file: string) => {
-        images.push(`http://127.0.0.1:8090/api/files/artistes/${artiste.id}/${file}`);
+        images.push(`https://sae203.kkruger.fr:443/api/files/artistes/${artiste.id}/${file}`);
       });
     } else if (typeof artiste.gallerie_photo === 'string') {
-      images.push(`http://127.0.0.1:8090/api/files/artistes/${artiste.id}/${artiste.gallerie_photo}`);
+      images.push(`https://sae203.kkruger.fr:443/api/files/artistes/${artiste.id}/${artiste.gallerie_photo}`);
     }
   }
   return images;

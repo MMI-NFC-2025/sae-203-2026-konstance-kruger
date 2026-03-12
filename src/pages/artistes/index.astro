@@ -2,7 +2,7 @@
 import Layout from '../../layouts/Layout.astro';
 import PocketBase from 'pocketbase';
 
-const pb = new PocketBase('http://127.0.0.1:8090');
+const pb = new PocketBase('https://sae203.kkruger.fr:443');
 
 const allArtistes = await pb.collection('artistes').getFullList({
   sort: 'nom'
@@ -78,7 +78,7 @@ filteredArtistes = filteredArtistes.filter((artiste) => artiste.passages.length 
 function getImageUrl(artiste: any): string | null {
   const imageField = artiste.photo_artiste;
   if (imageField) {
-    return `http://127.0.0.1:8090/api/files/artistes/${artiste.id}/${imageField}`;
+    return `https://sae203.kkruger.fr:443/api/files/artistes/${artiste.id}/${imageField}`;
   }
   return null;
 }
