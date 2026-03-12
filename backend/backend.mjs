@@ -3,8 +3,7 @@ import PocketBase from 'pocketbase';
 const pb = new PocketBase('http://127.0.0.1:8090');
 
 /**
- * Retourne la liste de tous les artistes triés par date de représentation
- * On passe par la collection programme, puis on développe artiste et scene
+Liste de tout les artistes par date de passage
  */
 export async function getAllArtistesByDate() {
   return await pb.collection('programme').getFullList({
@@ -23,7 +22,7 @@ export async function getAllScenesByName() {
 }
 
 /**
- * Retourne la liste de tous les artistes triés par ordre alphabétique
+ * Retourne la liste de tous les artistes triés par nom
  */
 export async function getAllArtistesAlphabetical() {
   return await pb.collection('artistes').getFullList({
@@ -31,23 +30,18 @@ export async function getAllArtistesAlphabetical() {
   });
 }
 
-/**
- * Retourne les infos d'un artiste en donnant son id
- * @param {string} id
- */
-export async function getArtisteById(id) {
-  return await pb.collection('artistes').getOne(id);
+export async function getArtisteById(kbhozwpz26ufa89) {
+  return await pb.collection('artistes').getOne(kbhozwpz26ufa89);
+}
+
+export async function getSceneById(xb5tswnpc3h0c3j) {
+  return await pb.collection('scenes').getOne(xb5tswnpc3h0c3j);
 }
 
 
-
-/**
- * Retourne tous les artistes se produisant sur une scène donnée par son id, triés par date
- * @param {string} sceneId
- */
-export async function getArtistesBySceneId(sceneId) {
+export async function getArtistesBySceneId(xb5tswnpc3h0c3j) {
   return await pb.collection('programme').getFullList({
-    filter: `scene = "${sceneId}"`,
+    filter: `scene = "${xb5tswnpc3h0c3j}"`,
     sort: 'date',
     expand: 'artiste,scene'
   });

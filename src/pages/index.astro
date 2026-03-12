@@ -19,38 +19,260 @@ const programme = await pb.collection('programme').getFullList({
 ---
 
 <Layout titre="Accueil">
-    <section 
-    class="h-[70vh] text-white text-center bg-cover bg-no-repeat"
-    style="background-image: url('/hero.svg'); background-position: center 35%;"
-    >
-      <section class="px-6 py-12">
-    <h1 class="mb-4 text-4xl font-bold text-white">Les rives du territoire</h1>
-        <h1 class="mb-4 text-4xl font-bold text-blue-300"> 2026</h1>
-    <p class="mb-6 max-w-2xl">
-      Festival de musique au bord de l’eau, entre scène, nature et découvertes artistiques.
-    </p>
-    <a href="/programme" class="inline-block rounded bg-black px-5 py-3 text-white">
-      Voir le programme
-    </a>
+  <section class="relative isolate min-h-[78svh] overflow-hidden md:min-h-[82vh]">
+    <img
+      src="/hero.svg"
+      alt="Festival Les rives du territoire"
+      class="absolute inset-0 -z-20 h-full w-full object-cover object-center"
+    />
+
+    <div class="mx-auto flex min-h-[78svh] max-w-7xl items-end px-6 pb-14 pt-28 md:min-h-[82vh] md:items-center md:pb-20 md:pt-32">
+      <div class="w-full text-center text-white">
+        <h1 class="mx-auto max-w-4xl text-4xl font-extrabold leading-tight md:text-6xl">
+          Les rives du territoire
+        </h1>
+
+        <p class="mt-2 text-4xl font-extrabold text-blue-300 md:text-6xl">
+          2026
+        </p>
+
+        <div class="mt-4 space-y-1 text-lg md:text-2xl">
+          <p>20 au 23 décembre 2026</p>
+          <p>Belfort</p>
+        </div>
+
+        <a
+          href="/programme"
+          class="mt-8 inline-flex min-w-[260px] items-center justify-center rounded-full bg-[var(--color-accent)] px-8 py-4 text-lg font-semibold text-slate-900 shadow-lg transition hover:scale-[1.02] hover:shadow-xl"
+        >
+          Réserver mes places
+        </a>
+      </div>
+    </div>
   </section>
-    <section class="px-6 py-10">
-        <h2 class="mb-4 text-2xl font-semibold">Programme</h2>
-    <ul class="space-y-3">
-      {programme.map((item) => (
-        <li>
-          {item.expand?.artiste?.nom} — {item.expand?.scene?.nom} — {new Date(item.date).toLocaleString('fr-FR')}
-        </li>
-      ))}
-    </ul>
 
-    <h2 class="mb-4 text-2xl font-semibold">Artistes</h2>
-    <ul class="mb-10 space-y-2">
-      {artistes.map((artiste) => (
-        <li>
-          {artiste.nom} — {artiste.genre_musical}
-        </li>
-      ))}
-    </ul>
+  <section class="bg-white py-16 text-slate-500 md:py-24">
+    <div class="mx-auto max-w-7xl px-6">
+      <div class="text-center">
+        <h2 class="text-4xl font-bold md:text-5xl">Programme</h2>
+        <p class="mt-3 text-lg text-slate-400 md:text-xl font-semibold">
+          4 jours de musique exceptionnelle
+        </p>
+      </div>
 
+      <div class="mt-10 grid gap-5 md:grid-cols-2 xl:grid-cols-4">
+        <article class="rounded-3xl bg-blue-300 p-6 text-left">
+          <p class="text-sm font-bold text-sky-100">📅 Jeudi 20 Déc</p>
+          <h3 class="mt-2 text-xl font-bold text-white">Soirée d'ouverture</h3>
+          <p class="mt-1 text-slate-500">Artistes émergents et DJ sets</p>
+        </article>
+
+        <article class="rounded-3xl bg-blue-300 p-6 text-left">
+          <p class="text-sm font-bold text-sky-100">⭐ Vendredi 21 Déc</p>
+          <h3 class="mt-2 text-xl font-bold text-white">Têtes d'affiche</h3>
+          <p class="mt-1 text-slate-500">Les plus grands noms de la scène</p>
+        </article>
+
+        <article class="rounded-3xl bg-blue-300 p-6 text-left">
+          <p class="text-sm font-bold text-sky-100">🎵 Samedi 22 Déc</p>
+          <h3 class="mt-2 text-xl font-bold text-white">Multi-genres</h3>
+          <p class="mt-1 text-slate-500">Rock, électro, pop et hip‑hop</p>
+        </article>
+
+        <article class="rounded-3xl bg-blue-300 p-6 text-left">
+          <p class="text-sm font-bold text-sky-100">❤️ Dimanche 23 Déc</p>
+          <h3 class="mt-2 text-xl font-bold text-white">Grande finale</h3>
+          <p class="mt-1 text-slate-500">Spectacle exceptionnel de clôture</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="bg-black py-16 text-white md:py-24">
+    <div class="mx-auto max-w-7xl px-6">
+      <div class="text-center">
+        <h2 class="text-4xl font-bold md:text-5xl">Artistes</h2>
+        <p class="mt-3 text-lg text-slate-300 md:text-xl">
+          Une programmation exceptionnelle
+        </p>
+      <div class="mt-10 text-center">
+      </div>
+    </div>
+      <div class="mx-auto max-w-7xl px-6">
+    <div class="text-center">
+    </div>
+    <div class="mx-auto mt-10 grid max-w-3xl grid-cols-2 gap-5 md:mt-14 md:gap-8 font-bold">
+      {[
+        {
+          genre: 'Électro',
+          icon: '🎤',
+          gradient: 'from-fuchsia-500 to-pink-500',
+        },
+        {
+          genre: 'Rock',
+          icon: '🎸',
+          gradient: 'from-blue-500 to-violet-500',
+        },
+        {
+          genre: 'Hip-Hop',
+          icon: '🥁',
+          gradient: 'from-emerald-400 to-blue-500',
+        },
+        {
+          genre: 'Pop',
+          icon: '🎧',
+          gradient: 'from-amber-400 to-rose-500',
+        },
+      ].map((artiste) => (
+        <article class="text-center">
+          <div
+            class={`flex aspect-square items-center justify-center rounded-[22px] bg-gradient-to-br ${artiste.gradient} shadow-lg`}
+          >
+            <span class="text-5xl text-white md:text-6xl">{artiste.icon}</span>
+          </div>
+
+          <h3 class="mt-4 text-2xl font-bold leading-none">{artiste.nom}</h3>
+          <p class="mt-2 text-lg text-slate-300">{artiste.genre}</p>
+        </article>
+      ))}
+    </div>
+
+    <div class="mt-10 text-center">
+      <a
+        href="/artistes"
+        class="inline-flex items-center justify-center rounded-full border border-[#a9c8f7] px-8 py-3 text-lg font-semibold text-[#a9c8f7] transition hover:bg-[#a9c8f7] hover:text-slate-900"
+      >
+        Voir tous les artistes
+      </a>
+    </div>
+  </div>
+  </section>
+
+  <section class="bg-[var(--color-surface)] py-16 text-white md:py-24">
+    <div class="mx-auto max-w-7xl px-6">
+      <div class="text-center">
+        <h2 class="text-4xl font-bold md:text-5xl">Infos pratiques</h2>
+        <p class="mt-3 text-lg text-slate-300 md:text-xl">
+          Tout ce qu'il faut savoir
+        </p>
+      </div>
+
+      <div class="mt-10 grid gap-5 md:mt-14 md:grid-cols-2 xl:grid-cols-4">
+        <article class="rounded-3xl p-2">
+          <div class="flex items-start gap-4">
+            <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-[var(--color-accent)] text-slate-900">📍</div>
+            <div>
+              <h3 class="text-xl font-bold">Lieu</h3>
+              <p class="mt-2 text-slate-300">Centre-ville de Belfort</p>
+              <p class="text-slate-300">Accès facile en transport</p>
+            </div>
+          </div>
+        </article>
+
+        <article class="rounded-3xl p-2">
+          <div class="flex items-start gap-4">
+            <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-[var(--color-accent)] text-slate-900">🎫</div>
+            <div>
+              <h3 class="text-xl font-bold">Billetterie</h3>
+              <p class="mt-2 text-slate-300">Pass 4 jours : 120€</p>
+              <p class="text-slate-300">Billets journée : 35€</p>
+            </div>
+          </div>
+        </article>
+
+        <article class="rounded-3xl p-2">
+          <div class="flex items-start gap-4">
+            <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-[var(--color-accent)] text-slate-900">🛏️</div>
+            <div>
+              <h3 class="text-xl font-bold">Hébergement</h3>
+              <p class="mt-2 text-slate-300">Hôtels partenaires</p>
+            </div>
+          </div>
+        </article>
+
+        <article class="rounded-3xl p-2">
+          <div class="flex items-start gap-4">
+            <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-[var(--color-accent)] text-slate-900">🍴</div>
+            <div>
+              <h3 class="text-xl font-bold">Restauration</h3>
+              <p class="mt-2 text-slate-300">Food trucks variés</p>
+              <p class="text-slate-300">Bars et buvettes</p>
+            </div>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="bg-black py-16 text-white md:py-24">
+    <div class="mx-auto max-w-5xl px-6 text-center">
+      <h2 class="text-4xl font-bold md:text-5xl">À propos</h2>
+      <p class="mt-3 text-xl text-slate-300">L'esprit du festival</p>
+
+      <div class="mx-auto mt-8 max-w-3xl space-y-5 text-lg leading-8 text-slate-200 text-left">
+        <p>
+          Depuis 2022, notre festival rassemble les amoureux de musique dans une
+          atmosphère unique et conviviale.
+        </p>
+        <p>
+          Découvrez une programmation variée mêlant têtes d'affiche
+          internationales et talents émergents, dans un cadre exceptionnel au cœur de Belfort.
+        </p>
+      </div>
+    </div>
+    <div class="mt-10 grid grid-cols-3 gap-4 text-center">
+  <article class="flex flex-col items-center">
+    <div class="border border-white px-3 py-1">
+      <p class="text-4xl font-extrabold leading-none text-[#a9c8f7] md:text-5xl">
+        50K+
+      </p>
+    </div>
+    <p class="mt-3 text-lg text-slate-400 md:text-xl">Festivaliers</p>
+  </article>
+
+  <article class="flex flex-col items-center">
+    <p class="text-4xl font-extrabold leading-none text-[#a9c8f7] md:text-5xl">
+      100+
+    </p>
+    <p class="mt-3 text-lg text-slate-400 md:text-xl">Artistes</p>
+  </article>
+
+  <article class="flex flex-col items-center">
+    <p class="text-4xl font-extrabold leading-none text-[#a9c8f7] md:text-5xl">
+      4
+    </p>
+    <p class="mt-3 text-lg text-slate-400 md:text-xl">Scènes</p>
+  </article>
+  </div>
+  </section>
+
+  <section class="bg-[var(--color-surface)] py-16 text-white md:py-24">
+    <div class="mx-auto max-w-7xl px-6">
+      <div class="text-center">
+        <h2 class="text-4xl font-bold md:text-5xl">Nos partenaires</h2>
+      </div>
+
+      <div class="partners-grid">
+        <img
+        src="/public/orange.png"
+        alt="Orange"
+        class="w-40 mx-auto"
+      />
+      <img
+        src="/public/E.Leclerc-Logo.png"
+        alt="E.Leclerc"
+        class="w-40 mx-auto"
+      />
+      <img
+        src="/public/Miecaline.webp"
+        alt="Mie Câline"
+        class="w-20 mx-auto"
+      />
+      <img
+        src="/public/Levis.png"
+        alt="Levi's"
+        class="w-30 mx-auto"
+      />
+    </div>
   </section>
 </Layout>

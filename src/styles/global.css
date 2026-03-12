@@ -1,1 +1,56 @@
 @import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --color-bg: #020617;
+  --color-surface: #0f172a;
+  --color-surface-2: #ffffff;
+  --color-accent: #a9c8f7;
+  --color-text: #f8fafc;
+  --color-muted: #cbd5e1;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  @apply bg-[var(--color-bg)] text-[var(--color-text)] antialiased;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+a {
+  @apply transition;
+}
+
+@layer components {
+  .section-title {
+    @apply text-4xl font-bold md:text-5xl;
+  }
+
+  .section-subtitle {
+    @apply mt-3 text-lg text-slate-300 md:text-xl;
+  }
+
+  .container-site {
+    @apply mx-auto max-w-7xl px-6;
+  }
+
+  .card-dark {
+    @apply rounded-3xl border border-white/10 bg-white/5 p-6 shadow-[0_12px_40px_rgba(0,0,0,0.25)] backdrop-blur-sm;
+  }
+
+  .button-primary {
+    @apply inline-flex items-center justify-center rounded-full bg-[var(--color-accent)] px-8 py-4 text-lg font-semibold text-slate-900 shadow-lg transition hover:scale-[1.02] hover:shadow-xl;
+  }
+
+  .button-outline {
+    @apply inline-flex items-center justify-center rounded-full border border-[var(--color-accent)] px-6 py-3 text-base font-semibold text-[var(--color-accent)] transition hover:bg-[var(--color-accent)] hover:text-slate-900;
+  }
+}

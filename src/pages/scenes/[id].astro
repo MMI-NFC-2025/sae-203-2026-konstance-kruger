@@ -12,23 +12,318 @@ const programmeScene = await pb.collection('programme').getFullList({
   sort: 'date',
   expand: 'artiste'
 });
+
+function toDate(value: string | number | Date): Date {
+  return new Date(value);
+}
+
+function formatDayTab(dateValue: string | number | Date): string {
+  const d = toDate(dateValue);
+  const weekday = new Intl.DateTimeFormat('fr-FR', { weekday: 'long' }).format(d);
+  const day = new Intl.DateTimeFormat('fr-FR', { day: 'numeric', month: 'long' }).format(d);
+  const weekdayCap = weekday.charAt(0).toUpperCase() + weekday.slice(1);
+  return `${weekdayCap} ${day}`;
+}
+
+function formatTime(dateValue: string | number | Date): string {
+  return new Intl.DateTimeFormat('fr-FR', {
+    hour: '2-digit',
+    minute: '2-digit',
+  }).format(toDate(dateValue));
+}
+
+function formatTimeRange(dateValue: string | number | Date): string {
+  const start = toDate(dateValue);
+  const end = new Date(start.getTime() + 60 * 60 * 1000);
+  return `${formatTime(start)} - ${formatTime(end)}`;
+}
+
+function getDayKey(dateValue: string | number | Date): string {
+  const d = toDate(dateValue);
+  const year = d.getFullYear();
+  const month = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+}
+
+function getImageUrl(scene: any): string | null {
+  const imageField = scene.photo_scene || scene.image;
+  if (imageField) {
+    return `http://127.0.0.1:8090/api/files/scenes/${scene.id}/${imageField}`;
+  }
+  return null;
+}
+
+// Grouper les concerts par jour
+const groupedByDay = programmeScene.reduce((acc: any, item: any) => {
+  const dayKey = getDayKey(item.date);
+  const dayLabel = formatDayTab(item.date);
+  
+  if (!acc[dayKey]) {
+    acc[dayKey] = {
+      dayKey,
+      dayLabel,
+      concerts: []
+    };
+  }
+  
+  acc[dayKey].concerts.push(item);
+  return acc;
+}, {});
+
+const daysArray = Object.values(groupedByDay) as any[];
 ---
 
 <Layout titre={scene.nom}>
-  <section class="px-6 py-12">
-    <h1 class="mb-4 text-4xl font-bold">{scene.nom}</h1>
-    <p class="mb-2">{scene.description}</p>
-    <p class="mb-8">Capacité : {scene.capacite}</p>
+  <main class="min-h-screen bg-white pb-24">
+    <!-- Hero avec image -->
+    <div class="relative h-80 overflow-hidden rounded-3xl">
+      {getImageUrl(scene) ? (
+        <img src={getImageUrl(scene)} alt={scene.nom} class="h-full w-full object-cover" />
+      ) : (
+        <div class="h-full w-full bg-gradient-to-br from-slate-300 to-slate-400" />
+      )}
+      
+      <!-- Retour -->
+      <a href="/scenes" class="absolute top-6 left-6 flex h-12 w-12 items-center justify-center rounded-full bg-white/30 backdrop-blur text-white hover:bg-white/50 transition">
+        <svg viewBox="0 0 24 24" class="h-6 w-6" fill="none" stroke="currentColor" stroke-width="2.5">
+          <path d="M15 18l-6-6 6-6" />
+        </svg>
+      </a>
 
-    <section>
-      <h2 class="mb-4 text-2xl font-semibold">Artistes sur cette scène</h2>
-      <ul class="space-y-3">
-        {programmeScene.map((item) => (
-          <li class="rounded-xl border p-4">
-            {item.expand?.artiste?.nom} — {new Date(item.date).toLocaleString('fr-FR')}
-          </li>
-        ))}
-      </ul>
-    </section>
-  </section>
+      <!-- Menu -->
+      <button class="absolute top-6 right-6 flex h-12 w-12 items-center justify-center rounded-full bg-white/30 backdrop-blur text-white hover:bg-white/50 transition">
+        <svg viewBox="0 0 24 24" class="h-6 w-6" fill="currentColor">
+          <path d="M3 6h18M3 12h18M3 18h18" />
+        </svg>
+      </button>
+    </div>
+
+    <div class="px-4 py-8">
+      <div class="mx-auto max-w-2xl space-y-8">
+        <!-- Infos scène -->
+        <div>
+          <h1 class="mb-2 text-4xl font-black text-slate-900">
+            {scene.nom}
+          </h1>
+          {scene.description && (
+            <p class="text-base text-slate-600">
+              {scene.description}
+            </p>
+          )}
+        </div>
+
+        <!-- Programme de la scène -->
+        {daysArray.length > 0 && (
+          <div>
+            <h2 class="mb-6 text-2xl font-black text-slate-900">Programme</h2>
+            
+            {daysArray.map((dayGroup: any) => (
+              <div class="mb-8">
+                <!-- Jour -->
+                <div class="mb-4 flex items-center gap-2">
+                  <svg viewBox="0 0 24 24" class="h-5 w-5 fill-slate-700">
+                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2" fill="none" stroke="currentColor" stroke-width="2"/>
+                    <line x1="16" y1="2" x2="16" y2="6" stroke="currentColor" stroke-width="2"/>
+                    <line x1="8" y1="2" x2="8" y2="6" stroke="currentColor" stroke-width="2"/>
+                  </svg>
+                  <h3 class="font-black text-slate-900">{dayGroup.dayLabel}</h3>
+                </div>
+
+                <!-- Concerts du jour -->
+                <div class="space-y-3">
+                  {dayGroup.concerts.map((concert: any) => (
+                    <div class="flex items-center justify-between rounded-xl bg-slate-50 p-4">
+                      <div>
+                        <div class="font-black text-slate-900">
+                          {concert.expand?.artiste?.nom}
+                        </div>
+                        <div class="text-sm text-slate-600">
+                          {formatTimeRange(concert.date)}
+                        </div>
+                      </div>
+                      <button class="favorite-btn text-slate-400 hover:text-yellow-400 transition" data-id={concert.id}>
+                        <span class="star-outline block">
+                          <svg viewBox="0 0 24 24" class="h-6 w-6" fill="none" stroke="currentColor" stroke-width="2">
+                            <polygon points="12 2 15.09 10.26 24 10.35 17.18 16.54 19.34 24.89 12 18.71 4.66 24.89 6.82 16.54 0 10.35 8.91 10.26 12 2" />
+                          </svg>
+                        </span>
+                        <span class="star-filled hidden">
+                          <svg viewBox="0 0 24 24" class="h-6 w-6 fill-yellow-400" stroke="currentColor" stroke-width="2">
+                            <polygon points="12 2 15.09 10.26 24 10.35 17.18 16.54 19.34 24.89 12 18.71 4.66 24.89 6.82 16.54 0 10.35 8.91 10.26 12 2" />
+                          </svg>
+                        </span>
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+
+        <!-- Infos Pratiques -->
+        <div>
+          <h2 class="mb-6 text-2xl font-black text-slate-900">Infos Pratiques</h2>
+          
+          <!-- Tarifs -->
+          <div class="mb-6 rounded-2xl bg-blue-400 p-6 text-white">
+            <h3 class="mb-4 flex items-center gap-2 text-lg font-black">
+              <svg viewBox="0 0 24 24" class="h-5 w-5" fill="currentColor">
+                <rect x="2" y="7" width="20" height="14" rx="2" ry="2" />
+                <path d="M16 5v2m-8-2v2M6 15h1m10 0h1" />
+              </svg>
+              Tarifs
+            </h3>
+            <div class="space-y-3">
+              <div class="flex justify-between">
+                <span>Pass 1 jour</span>
+                <span class="font-bold">89€</span>
+              </div>
+              <div class="flex justify-between">
+                <span>Pass 2 jours</span>
+                <span class="font-bold">159€</span>
+              </div>
+              <div class="flex justify-between">
+                <span>VIP Pass</span>
+                <span class="font-bold">299€</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Hébergements -->
+          <div class="mb-6 rounded-2xl bg-slate-100 p-6">
+            <h3 class="mb-3 flex items-center gap-2 text-lg font-black text-slate-900">
+              <svg viewBox="0 0 24 24" class="h-5 w-5" fill="currentColor">
+                <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h10l7 7v11a2 2 0 0 1-2 2z" />
+                <polyline points="17 21 17 13 7 13 7 21" />
+                <polyline points="7 3 7 8 15 8" />
+              </svg>
+              Hébergements
+            </h3>
+            <div class="text-slate-700">
+              <div class="font-semibold">Hôtels partenaires</div>
+              <div class="text-sm text-slate-600">Réductions jusqu'à 20%</div>
+            </div>
+          </div>
+
+          <!-- Transports -->
+          <div class="rounded-2xl bg-slate-100 p-6 space-y-4">
+            <h3 class="flex items-center gap-2 text-lg font-black text-slate-900">
+              <svg viewBox="0 0 24 24" class="h-5 w-5" fill="currentColor">
+                <path d="M12 2c-4.4 0-8 1.8-8 4v13c0 2.2 3.6 4 8 4s8-1.8 8-4V6c0-2.2-3.6-4-8-4zm0 2c3.3 0 6 1.3 6 3v2c0 1.7-2.7 3-6 3s-6-1.3-6-3V7c0-1.7 2.7-3 6-3zm0 12c-3.3 0-6-1.3-6-3v-1c1.5 1.3 3.8 2 6 2s4.5-.7 6-2v1c0 1.7-2.7 3-6 3z" />
+              </svg>
+              Transports
+            </h3>
+            <div>
+              <div class="flex items-center justify-between">
+                <div>
+                  <div class="font-semibold text-slate-900">Navettes gratuites</div>
+                  <div class="text-sm text-slate-600">Gare → Festival</div>
+                </div>
+                <svg viewBox="0 0 24 24" class="h-5 w-5 text-green-500" fill="currentColor">
+                  <path d="M20 6L9 17l-5-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+              </div>
+            </div>
+            <div class="border-t border-slate-300 pt-4">
+              <div class="flex items-center justify-between">
+                <div>
+                  <div class="font-semibold text-slate-900">Parking</div>
+                  <div class="text-sm text-slate-600">15€/jour</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Barre de navigation en bas -->
+    <nav class="fixed bottom-0 left-0 right-0 flex justify-around bg-white border-t border-slate-200 px-4 py-3">
+      <a href="/" class="flex flex-col items-center gap-1 text-xs font-semibold text-slate-600 hover:text-slate-900">
+        <svg viewBox="0 0 24 24" class="h-6 w-6" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+          <polyline points="9 22 9 12 15 12 15 22" />
+        </svg>
+        Accueil
+      </a>
+      <a href="/artistes" class="flex flex-col items-center gap-1 text-xs font-semibold text-slate-600 hover:text-slate-900">
+        <svg viewBox="0 0 24 24" class="h-6 w-6" fill="currentColor">
+          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+          <circle cx="9" cy="7" r="4" />
+          <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+          <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+        </svg>
+        Scènes
+      </a>
+      <a href="/programme" class="flex flex-col items-center gap-1 text-xs font-semibold text-slate-600 hover:text-slate-900">
+        <svg viewBox="0 0 24 24" class="h-6 w-6" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+          <line x1="16" y1="2" x2="16" y2="6" />
+          <line x1="8" y1="2" x2="8" y2="6" />
+          <line x1="3" y1="10" x2="21" y2="10" />
+        </svg>
+        Infos
+      </a>
+      <a href="/contact" class="flex flex-col items-center gap-1 text-xs font-semibold text-slate-600 hover:text-slate-900">
+        <svg viewBox="0 0 24 24" class="h-6 w-6" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+          <polyline points="22 6 12 13 2 6" />
+        </svg>
+        Contact
+      </a>
+    </nav>
+  </main>
+
+  <script>
+    const storageKey = 'festival-favoris-scenes';
+
+    function getFavorites(): string[] {
+      try {
+        return JSON.parse(localStorage.getItem(storageKey) || '[]');
+      } catch {
+        return [];
+      }
+    }
+
+    function saveFavorites(favorites: string[]): void {
+      localStorage.setItem(storageKey, JSON.stringify(favorites));
+    }
+
+    function refreshFavorites(): void {
+      const favorites = getFavorites();
+
+      document.querySelectorAll('.favorite-btn').forEach((button: Element) => {
+        const id = (button as HTMLElement).dataset.id;
+        const isFavorite = favorites.includes(id);
+
+        const outline = button.querySelector('.star-outline');
+        const filled = button.querySelector('.star-filled');
+
+        if (outline && filled) {
+          outline.classList.toggle('hidden', isFavorite);
+          filled.classList.toggle('hidden', !isFavorite);
+        }
+      });
+    }
+
+    refreshFavorites();
+
+    document.querySelectorAll('.favorite-btn').forEach((button: Element) => {
+      button.addEventListener('click', (e: Event) => {
+        e.preventDefault();
+        const id = (button as HTMLElement).dataset.id;
+        const favorites = getFavorites();
+
+        if (favorites.includes(id)) {
+          saveFavorites(favorites.filter((fav: string) => fav !== id));
+        } else {
+          saveFavorites([...favorites, id]);
+        }
+
+        refreshFavorites();
+      });
+    });
+  </script>
 </Layout>

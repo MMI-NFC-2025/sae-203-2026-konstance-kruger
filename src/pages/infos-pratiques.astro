@@ -2,30 +2,328 @@
 import Layout from '../layouts/Layout.astro';
 ---
 
-<Layout titre="Infos pratiques">
-  <section class="px-6 py-12">
-    <h1 class="mb-6 text-4xl font-bold">Infos pratiques</h1>
+<Layout titre="Infos Pratiques">
+  <main class="min-h-screen bg-white pb-24">
+    <!-- En-tête -->
+    <section class="bg-linear-to-b from-[#a9c8f7] to-[#8eb3f0] px-4 py-4 sticky top-0 z-10">
+      <div class="flex items-center justify-between mb-4">
+        <a href="/" class="text-slate-700">
+          <svg viewBox="0 0 24 24" class="h-6 w-6" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="M15 18l-6-6 6-6" />
+          </svg>
+        </a>
+        <h1 class="text-xl font-black text-slate-900">Infos Pratiques</h1>
+        <button class="text-slate-700">
+          <svg viewBox="0 0 24 24" class="h-6 w-6" fill="currentColor">
+            <path d="M3 6h18M3 12h18M3 18h18" />
+          </svg>
+        </button>
+      </div>
+    </section>
 
-    <div class="space-y-8">
-      <section>
-        <h2 class="mb-2 text-2xl font-semibold">Tarifs</h2>
-        <p>Pass 1 jour, pass 2 jours, tarifs réduits.</p>
-      </section>
+    <div class="px-4 py-8">
+      <div class="mx-auto max-w-2xl space-y-8">
+        <!-- TARIFS -->
+        <section>
+          <h2 class="mb-6 text-3xl font-black text-slate-900 flex items-center gap-2">
+            <svg viewBox="0 0 24 24" class="h-7 w-7" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="1" />
+              <path d="M12 1v6m0 6v6" />
+              <path d="M4.22 4.22l4.24 4.24m5.08 0l4.24-4.24M4.22 19.78l4.24-4.24m5.08 0l4.24 4.24" />
+            </svg>
+            Tarifs
+          </h2>
 
-      <section>
-        <h2 class="mb-2 text-2xl font-semibold">Hébergements</h2>
-        <p>Hôtels, campings et hébergements partenaires.</p>
-      </section>
+          <div class="space-y-3">
+            <div class="rounded-2xl bg-blue-400 p-6 text-white">
+              <h3 class="mb-4 text-lg font-black">Pass 1 jour</h3>
+              <div class="space-y-2">
+                <div class="flex justify-between">
+                  <span>Adultes</span>
+                  <span class="font-bold">89€</span>
+                </div>
+                <div class="flex justify-between">
+                  <span>Enfants (-12 ans)</span>
+                  <span class="font-bold">39€</span>
+                </div>
+                <div class="flex justify-between">
+                  <span>Étudiants</span>
+                  <span class="font-bold">69€</span>
+                </div>
+              </div>
+            </div>
 
-      <section>
-        <h2 class="mb-2 text-2xl font-semibold">Transport</h2>
-        <p>Train, voiture, covoiturage, parkings et accès au site.</p>
-      </section>
+            <div class="rounded-2xl bg-blue-500 p-6 text-white">
+              <h3 class="mb-4 text-lg font-black">Pass 2 jours</h3>
+              <div class="space-y-2">
+                <div class="flex justify-between">
+                  <span>Adultes</span>
+                  <span class="font-bold">159€</span>
+                </div>
+                <div class="flex justify-between">
+                  <span>Enfants (-12 ans)</span>
+                  <span class="font-bold">69€</span>
+                </div>
+                <div class="flex justify-between">
+                  <span>Étudiants</span>
+                  <span class="font-bold">129€</span>
+                </div>
+              </div>
+            </div>
 
-      <section>
-        <h2 class="mb-2 text-2xl font-semibold">FAQ</h2>
-        <p>Questions fréquentes sur le festival.</p>
-      </section>
+            <div class="rounded-2xl bg-blue-600 p-6 text-white">
+              <h3 class="mb-4 text-lg font-black">VIP Pass</h3>
+              <div class="space-y-2">
+                <div class="flex justify-between">
+                  <span>3 jours - accès VIP</span>
+                  <span class="font-bold">299€</span>
+                </div>
+                <div class="text-xs text-blue-100 mt-4">
+                  ✓ Accès fast-track<br/>✓ Parking gratuit<br/>✓ Zone VIP avec vue premium
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- HEBERGEMENTS -->
+        <section>
+          <h2 class="mb-6 text-3xl font-black text-slate-900 flex items-center gap-2">
+            <svg viewBox="0 0 24 24" class="h-7 w-7" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h10l7 7v11a2 2 0 0 1-2 2z" />
+              <polyline points="17 21 17 13 7 13 7 21" />
+            </svg>
+            Hébergements
+          </h2>
+
+          <div class="space-y-3">
+            <div class="rounded-2xl bg-slate-100 p-6">
+              <h3 class="mb-3 font-black text-slate-900">Hôtels partenaires</h3>
+              <p class="text-sm text-slate-700 mb-3">
+                Découvrez nos partenaires hôtels avec des réductions exclusives jusqu'à 20% pour les festivaliers.
+              </p>
+              <ul class="text-sm space-y-2 text-slate-600">
+                <li>• Hotel Luxury 5★ - 20% de réduction</li>
+                <li>• Hotel Confort 3★ - 15% de réduction</li>
+                <li>• Hotel Budget 2★ - 10% de réduction</li>
+              </ul>
+            </div>
+
+            <div class="rounded-2xl bg-slate-100 p-6">
+              <h3 class="mb-3 font-black text-slate-900">Camping officiel</h3>
+              <p class="text-sm text-slate-700 mb-3">
+                Camping aménagé à proximité du festival avec toutes les commodités.
+              </p>
+              <ul class="text-sm space-y-2 text-slate-600">
+                <li>• Emplacement tente: 25€/nuit</li>
+                <li>• Bungalow: 60€/nuit</li>
+                <li>• Parking: 10€/jour</li>
+              </ul>
+            </div>
+
+            <div class="rounded-2xl bg-slate-100 p-6">
+              <h3 class="mb-3 font-black text-slate-900">Airbnb & locations</h3>
+              <p class="text-sm text-slate-700">
+                De nombreux particuliers proposent des locations à des tarifs attractifs. Code promo: FESTIVAL2026 pour -10%
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- TRANSPORTS & ACCES -->
+        <section>
+          <h2 class="mb-6 text-3xl font-black text-slate-900 flex items-center gap-2">
+            <svg viewBox="0 0 24 24" class="h-7 w-7" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 2c-4.4 0-8 1.8-8 4v13c0 2.2 3.6 4 8 4s8-1.8 8-4V6c0-2.2-3.6-4-8-4zm0 2c3.3 0 6 1.3 6 3v2c0 1.7-2.7 3-6 3s-6-1.3-6-3V7c0-1.7 2.7-3 6-3zm0 12c-3.3 0-6-1.3-6-3v-1c1.5 1.3 3.8 2 6 2s4.5-.7 6-2v1c0 1.7-2.7 3-6 3z" />
+            </svg>
+            Transports & Accès
+          </h2>
+
+          <div class="space-y-3">
+            <div class="rounded-2xl bg-slate-100 p-6">
+              <div class="flex items-start justify-between mb-3">
+                <h3 class="font-black text-slate-900">Navettes gratuites</h3>
+                <svg viewBox="0 0 24 24" class="h-5 w-5 text-green-500" fill="currentColor">
+                  <path d="M20 6L9 17l-5-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+              </div>
+              <p class="text-sm text-slate-700">
+                • Gare centrale ↔ Festival (toutes les 30 min)<br/>
+                • Aéroport ↔ Festival (toutes les heures)<br/>
+                • Centre-ville ↔ Festival (toutes les 45 min)
+              </p>
+            </div>
+
+            <div class="rounded-2xl bg-slate-100 p-6">
+              <div class="flex items-start justify-between mb-3">
+                <h3 class="font-black text-slate-900">Parking</h3>
+              </div>
+              <p class="text-sm text-slate-700 mb-3">
+                Plusieurs parkings disponibles autour du site:
+              </p>
+              <ul class="text-sm space-y-2 text-slate-600">
+                <li>• Parking principal: 15€/jour</li>
+                <li>• Parking évènements: 12€/jour</li>
+                <li>• Parking VIP: gratuit (avec pass VIP)</li>
+              </ul>
+            </div>
+
+            <div class="rounded-2xl bg-slate-100 p-6">
+              <h3 class="mb-3 font-black text-slate-900">Accès au site</h3>
+              <p class="text-sm text-slate-700 mb-3">
+                <strong>Horaires:</strong><br/>
+                • Portes ouvertes: 10h - 6h du matin<br/>
+                • Accès 24h/24 pour les pass VIP
+              </p>
+              <p class="text-sm text-slate-700">
+                <strong>À apporter:</strong><br/>
+                • Badge d'accès (remis à l'entrée)<br/>
+                • Pièce d'identité<br/>
+                • Billet ou code du pass
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- FAQ -->
+        <section>
+          <h2 class="mb-6 text-3xl font-black text-slate-900 flex items-center gap-2">
+            <svg viewBox="0 0 24 24" class="h-7 w-7" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10" />
+              <path d="M12 16v-4m0-4h.01" />
+            </svg>
+            Questions Fréquentes
+          </h2>
+
+          <div class="space-y-3">
+            <details class="group border border-slate-200 rounded-2xl p-4 cursor-pointer">
+              <summary class="font-black text-slate-900 flex items-center justify-between">
+                Puis-je annuler mon ticket?
+                <svg class="w-5 h-5 transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path d="m6 9 6 6 6-6"></path>
+                </svg>
+              </summary>
+              <p class="text-slate-600 mt-4 text-sm">
+                Les annulations sont possibles jusqu'à 7 jours avant l'événement avec remboursement intégral. Passé ce délai, aucun remboursement ne sera accordé mais vous pourrez revendre votre ticket via notre plateforme.
+              </p>
+            </details>
+
+            <details class="group border border-slate-200 rounded-2xl p-4 cursor-pointer">
+              <summary class="font-black text-slate-900 flex items-center justify-between">
+                Puis-je apporter du matériel photo/vidéo?
+                <svg class="w-5 h-5 transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path d="m6 9 6 6 6-6"></path>
+                </svg>
+              </summary>
+              <p class="text-slate-600 mt-4 text-sm">
+                Les appareils photo personnels sont autorisés. Les caméras professionnelles et les trépieds de plus de 1,5m requièrent une autorisation spéciale. Contactez notre équipe avant le festival via contact@festival.fr
+              </p>
+            </details>
+
+            <details class="group border border-slate-200 rounded-2xl p-4 cursor-pointer">
+              <summary class="font-black text-slate-900 flex items-center justify-between">
+                Puis-je amener des enfants?
+                <svg class="w-5 h-5 transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path d="m6 9 6 6 6-6"></path>
+                </svg>
+              </summary>
+              <p class="text-slate-600 mt-4 text-sm">
+                Oui! Les enfants de moins de 12 ans bénéficient de tarifs réduits. Une zone famille avec animations est disponible toute la journée. Un point de rencontre des enfants égarés est situé à l'accueil principal.
+              </p>
+            </details>
+
+            <details class="group border border-slate-200 rounded-2xl p-4 cursor-pointer">
+              <summary class="font-black text-slate-900 flex items-center justify-between">
+                Y a-t-il des consignes?
+                <svg class="w-5 h-5 transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path d="m6 9 6 6 6-6"></path>
+                </svg>
+              </summary>
+              <p class="text-slate-600 mt-4 text-sm">
+                Oui, des consignes sont disponibles près de chaque scène principale. Tarif: 5€ par article et par jour. Tout objet laissé après la fermeture sera mis à la consigne centrale.
+              </p>
+            </details>
+
+            <details class="group border border-slate-200 rounded-2xl p-4 cursor-pointer">
+              <summary class="font-black text-slate-900 flex items-center justify-between">
+                Puis-je revendre mon ticket?
+                <svg class="w-5 h-5 transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path d="m6 9 6 6 6-6"></path>
+                </svg>
+              </summary>
+              <p class="text-slate-600 mt-4 text-sm">
+                Oui, vous pouvez revendre votre ticket via notre plateforme officielle de revente. La commission est de 5%. Vous conserverez 95% du prix de vente.
+              </p>
+            </details>
+
+            <details class="group border border-slate-200 rounded-2xl p-4 cursor-pointer">
+              <summary class="font-black text-slate-900 flex items-center justify-between">
+                Comment accéder à mon billet?
+                <svg class="w-5 h-5 transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path d="m6 9 6 6 6-6"></path>
+                </svg>
+              </summary>
+              <p class="text-slate-600 mt-4 text-sm">
+                Votre billet vous sera envoyé par email 2 semaines avant l'événement. Vous recevrez un code QR à présenter à l'entrée. Vous pouvez aussi télécharger l'application mobile officielle du festival.
+              </p>
+            </details>
+
+            <details class="group border border-slate-200 rounded-2xl p-4 cursor-pointer">
+              <summary class="font-black text-slate-900 flex items-center justify-between">
+                Y a-t-il une assurance?
+                <svg class="w-5 h-5 transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path d="m6 9 6 6 6-6"></path>
+                </svg>
+              </summary>
+              <p class="text-slate-600 mt-4 text-sm">
+                Le festival ne couvre pas les vols ou pertes. Nous recommandons de souscrire une assurance voyage. Pour les pass VIP, une assurance annulation optionnelle est disponible pour 15€.
+              </p>
+            </details>
+          </div>
+        </section>
+      </div>
     </div>
-  </section>
+
+    <!-- Barre de navigation en bas -->
+    <nav class="fixed bottom-0 left-0 right-0 flex justify-around bg-white border-t border-slate-200 px-4 py-3">
+      <a href="/" class="flex flex-col items-center gap-1 text-xs font-semibold text-slate-600 hover:text-slate-900">
+        <svg viewBox="0 0 24 24" class="h-6 w-6" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+          <polyline points="9 22 9 12 15 12 15 22" />
+        </svg>
+        Accueil
+      </a>
+      <a href="/artistes" class="flex flex-col items-center gap-1 text-xs font-semibold text-slate-600 hover:text-slate-900">
+        <svg viewBox="0 0 24 24" class="h-6 w-6" fill="currentColor">
+          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+          <circle cx="9" cy="7" r="4" />
+          <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+          <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+        </svg>
+        Artistes
+      </a>
+      <a href="/programme" class="flex flex-col items-center gap-1 text-xs font-semibold text-slate-600 hover:text-slate-900">
+        <svg viewBox="0 0 24 24" class="h-6 w-6" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+          <line x1="16" y1="2" x2="16" y2="6" />
+          <line x1="8" y1="2" x2="8" y2="6" />
+          <line x1="3" y1="10" x2="21" y2="10" />
+        </svg>
+        Programme
+      </a>
+      <a href="/infos-pratiques" class="flex flex-col items-center gap-1 text-xs font-semibold text-[#4f9ef7]">
+        <svg viewBox="0 0 24 24" class="h-6 w-6" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10" />
+          <path d="M12 16v-4m0-4h.01" />
+        </svg>
+        Infos
+      </a>
+    </nav>
+  </main>
+
+  <style>
+    details summary::-webkit-details-marker {
+      display: none;
+    }
+  </style>
 </Layout>

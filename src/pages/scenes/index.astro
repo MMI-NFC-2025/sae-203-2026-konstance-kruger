@@ -4,22 +4,269 @@ import PocketBase from 'pocketbase';
 
 const pb = new PocketBase('http://127.0.0.1:8090');
 
-const scenes = await pb.collection('scenes').getFullList({
+const allScenes = await pb.collection('scenes').getFullList({
   sort: 'nom'
 });
+
+// Récupère tous les passages une seule fois
+const allProgrammes = await pb.collection('programme').getFullList({
+  expand: 'artiste,scene',
+  sort: 'date'
+});
+
+// Groupe les passages par scène
+const passagesByScene = allProgrammes.reduce((acc: any, p: any) => {
+  const sceneId = p.scene;
+  if (!acc[sceneId]) {
+    acc[sceneId] = [];
+  }
+  acc[sceneId].push(p);
+  return acc;
+}, {});
+
+// Récupère les passages pour chaque scène
+const scenesAvecPassages = allScenes.map((scene: any) => {
+  const passages = passagesByScene[scene.id] || [];
+  return { ...scene, passages };
+});
+
+function toDate(value: string | number | Date): Date {
+  return new Date(value);
+}
+
+function formatDatePassage(dateValue: string | number | Date): string {
+  const d = toDate(dateValue);
+  const day = new Intl.DateTimeFormat('fr-FR', { day: 'numeric', month: 'long' }).format(d);
+  const time = new Intl.DateTimeFormat('fr-FR', { hour: '2-digit', minute: '2-digit' }).format(d);
+  return `${day}, ${time}`;
+}
+
+const searchQuery = Astro.url.searchParams.get('search') ?? '';
+
+let filteredScenes = scenesAvecPassages.filter((scene: any) => {
+  const matchSearch = !searchQuery || scene.nom.toLowerCase().includes(searchQuery.toLowerCase());
+  return matchSearch;
+});
+
+// Filtre les scènes qui ont au moins un passage
+filteredScenes = filteredScenes.filter((scene: any) => scene.passages.length > 0);
+
+function getImageUrl(scene: any): string | null {
+  const imageField = scene.photo_scene || scene.image;
+  if (imageField) {
+    return `http://127.0.0.1:8090/api/files/scenes/${scene.id}/${imageField}`;
+  }
+  return null;
+}
+
+function buildUrl(search: string): string {
+  const params = new URLSearchParams();
+  if (search) params.set('search', search);
+  const query = params.toString();
+  return query ? `/scenes?${query}` : '/scenes';
+}
 ---
 
 <Layout titre="Scènes">
-  <section class="px-6 py-12">
-    <h1 class="mb-6 text-4xl font-bold">Scènes</h1>
-
-    <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-      {scenes.map((scene) => (
-        <a href={`/scenes/${scene.id}`} class="rounded-xl border p-4 hover:shadow">
-          <h2 class="text-xl font-semibold">{scene.nom}</h2>
-          <p class="mt-2 text-sm text-gray-600">Capacité : {scene.capacite}</p>
+  <main class="min-h-screen bg-[#a9c8f7] pb-24">
+    <!-- En-tête -->
+    <section class="bg-linear-to-b from-[#a9c8f7] to-[#8eb3f0] px-4 py-4">
+      <div class="flex items-center justify-between mb-4">
+        <a href="/" class="text-slate-700">
+          <svg viewBox="0 0 24 24" class="h-6 w-6" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="M15 18l-6-6 6-6" />
+          </svg>
         </a>
-      ))}
-    </div>
-  </section>
+        <h1 class="text-xl font-black text-slate-900">Scènes</h1>
+        <button class="text-slate-700">
+          <svg viewBox="0 0 24 24" class="h-6 w-6" fill="currentColor">
+            <path d="M3 6h18M3 12h18M3 18h18" />
+          </svg>
+        </button>
+      </div>
+
+      <!-- Barre de recherche -->
+      <form method="GET" class="mb-6">
+        <div class="relative">
+          <svg viewBox="0 0 24 24" class="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-600">
+            <circle cx="11" cy="11" r="8" fill="none" stroke="currentColor" stroke-width="2" />
+            <path d="m21 21-4.35-4.35" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+          </svg>
+          <input
+            type="text"
+            name="search"
+            value={searchQuery}
+            placeholder="Rechercher une scène..."
+            class="w-full rounded-full bg-white pl-10 pr-4 py-2.5 text-sm text-slate-700 placeholder-slate-500 outline-none"
+          />
+        </div>
+      </form>
+    </section>
+
+    <!-- Liste des scènes -->
+    <section class="px-4 py-6 space-y-4">
+      {filteredScenes.length === 0 ? (
+        <div class="rounded-3xl bg-white p-8 text-center shadow-sm">
+          <p class="text-lg text-slate-600">Aucune scène ne correspond à votre recherche.</p>
+        </div>
+      ) : (
+        filteredScenes.map((scene: any) => {
+          const firstPassage = scene.passages[0];
+          return (
+            <a href={`/scenes/${scene.id}`} class="block">
+              <div class="rounded-2xl bg-white p-4 shadow-sm hover:shadow-md transition">
+                <div class="flex gap-4">
+                  <!-- Image -->
+                  <div class="relative shrink-0">
+                    {getImageUrl(scene) ? (
+                      <img
+                        src={getImageUrl(scene)}
+                        alt={scene.nom}
+                        class="h-20 w-20 object-cover rounded-lg"
+                      />
+                    ) : (
+                      <div class="h-20 w-20 bg-linear-to-br from-slate-300 to-slate-400 rounded-lg" />
+                    )}
+                    <!-- Cœur favoris -->
+                    <button class="favorite-btn absolute -top-2 -right-2 bg-blue-200 rounded-full p-1" data-id={scene.id}>
+                      <span class="heart-outline block">
+                        <svg viewBox="0 0 24 24" class="h-5 w-5" fill="white" stroke="currentColor" stroke-width="1.5">
+                          <path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8Z" />
+                        </svg>
+                      </span>
+                      <span class="heart-filled hidden">
+                        <svg viewBox="0 0 24 24" class="h-5 w-5" fill="#ef4444">
+                          <path d="M12 21s-7.1-4.5-9.5-9.1A5.9 5.9 0 0 1 12 4.8a5.9 5.9 0 0 1 9.5 7.1C19.1 16.5 12 21 12 21Z" />
+                        </svg>
+                      </span>
+                    </button>
+                  </div>
+
+                  <!-- Infos -->
+                  <div class="flex-1 min-w-0">
+                    <h2 class="text-base font-black text-[#4f9ef7]">
+                      {scene.nom}
+                    </h2>
+
+                    {scene.capacite && (
+                      <div class="mt-1 text-xs text-slate-600 font-medium">
+                        Capacité: {scene.capacite} personnes
+                      </div>
+                    )}
+
+                    {firstPassage && (
+                      <div class="mt-2 space-y-1">
+                        <div class="flex items-center gap-2 text-sm text-slate-700">
+                          <svg viewBox="0 0 24 24" class="h-4 w-4 fill-slate-700 shrink-0">
+                            <rect x="3" y="4" width="18" height="18" rx="2" ry="2" fill="none" stroke="currentColor" stroke-width="2"/>
+                            <line x1="16" y1="2" x2="16" y2="6" stroke="currentColor" stroke-width="2"/>
+                            <line x1="8" y1="2" x2="8" y2="6" stroke="currentColor" stroke-width="2"/>
+                          </svg>
+                          {formatDatePassage(firstPassage.date)}
+                        </div>
+                        <div class="flex items-center gap-2 text-sm text-slate-700">
+                          <svg viewBox="0 0 24 24" class="h-4 w-4 fill-slate-700 shrink-0">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                            <circle cx="9" cy="7" r="4" />
+                          </svg>
+                          {firstPassage.expand?.artiste?.nom}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </a>
+          );
+        })
+      )}
+    </section>
+
+    <!-- Barre de navigation en bas -->
+    <nav class="fixed bottom-0 left-0 right-0 flex justify-around bg-white border-t border-slate-200 px-4 py-3">
+      <a href="/" class="flex flex-col items-center gap-1 text-xs font-semibold text-slate-600 hover:text-slate-900">
+        <svg viewBox="0 0 24 24" class="h-6 w-6" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+          <polyline points="9 22 9 12 15 12 15 22" />
+        </svg>
+        Accueil
+      </a>
+      <a href="/artistes" class="flex flex-col items-center gap-1 text-xs font-semibold text-slate-600 hover:text-slate-900">
+        <svg viewBox="0 0 24 24" class="h-6 w-6" fill="currentColor">
+          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+          <circle cx="9" cy="7" r="4" />
+          <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+          <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+        </svg>
+        Artistes
+      </a>
+      <a href="/programme" class="flex flex-col items-center gap-1 text-xs font-semibold text-slate-600 hover:text-slate-900">
+        <svg viewBox="0 0 24 24" class="h-6 w-6" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+          <line x1="16" y1="2" x2="16" y2="6" />
+          <line x1="8" y1="2" x2="8" y2="6" />
+          <line x1="3" y1="10" x2="21" y2="10" />
+        </svg>
+        Programme
+      </a>
+      <a href="/profil" class="flex flex-col items-center gap-1 text-xs font-semibold text-slate-600 hover:text-slate-900">
+        <svg viewBox="0 0 24 24" class="h-6 w-6" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+          <circle cx="12" cy="7" r="4" />
+        </svg>
+        Profil
+      </a>
+    </nav>
+  </main>
+
+  <script>
+    const storageKey = 'festival-favoris-scenes';
+
+    function getFavorites(): string[] {
+      try {
+        return JSON.parse(localStorage.getItem(storageKey) || '[]');
+      } catch {
+        return [];
+      }
+    }
+
+    function saveFavorites(favorites: string[]): void {
+      localStorage.setItem(storageKey, JSON.stringify(favorites));
+    }
+
+    function refreshFavorites(): void {
+      const favorites = getFavorites();
+
+      document.querySelectorAll('.favorite-btn').forEach((button: Element) => {
+        const id = (button as HTMLElement).dataset.id;
+        const isFavorite = favorites.includes(id);
+
+        const outline = button.querySelector('.heart-outline');
+        const filled = button.querySelector('.heart-filled');
+
+        if (outline && filled) {
+          outline.classList.toggle('hidden', isFavorite);
+          filled.classList.toggle('hidden', !isFavorite);
+        }
+      });
+    }
+
+    refreshFavorites();
+
+    document.querySelectorAll('.favorite-btn').forEach((button: Element) => {
+      button.addEventListener('click', (e: Event) => {
+        e.preventDefault();
+        const id = (button as HTMLElement).dataset.id;
+        const favorites = getFavorites();
+
+        if (favorites.includes(id)) {
+          saveFavorites(favorites.filter((fav: string) => fav !== id));
+        } else {
+          saveFavorites([...favorites, id]);
+        }
+
+        refreshFavorites();
+      });
+    });
+  </script>
 </Layout>
