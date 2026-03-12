@@ -54,7 +54,6 @@ function getImageUrl(scene: any): string | null {
   return null;
 }
 
-// Grouper les concerts par jour
 const groupedByDay = programmeScene.reduce((acc: any, item: any) => {
   const dayKey = getDayKey(item.date);
   const dayLabel = formatDayTab(item.date);
@@ -76,7 +75,6 @@ const daysArray = Object.values(groupedByDay) as any[];
 
 <Layout titre={scene.nom}>
   <main class="min-h-screen bg-white pb-24">
-    <!-- Hero avec image -->
     <div class="relative h-80 overflow-hidden rounded-3xl">
       {getImageUrl(scene) ? (
         <img src={getImageUrl(scene)} alt={scene.nom} class="h-full w-full object-cover" />
@@ -84,14 +82,12 @@ const daysArray = Object.values(groupedByDay) as any[];
         <div class="h-full w-full bg-gradient-to-br from-slate-300 to-slate-400" />
       )}
       
-      <!-- Retour -->
       <a href="/scenes" class="absolute top-6 left-6 flex h-12 w-12 items-center justify-center rounded-full bg-white/30 backdrop-blur text-white hover:bg-white/50 transition">
         <svg viewBox="0 0 24 24" class="h-6 w-6" fill="none" stroke="currentColor" stroke-width="2.5">
           <path d="M15 18l-6-6 6-6" />
         </svg>
       </a>
 
-      <!-- Menu -->
       <button class="absolute top-6 right-6 flex h-12 w-12 items-center justify-center rounded-full bg-white/30 backdrop-blur text-white hover:bg-white/50 transition">
         <svg viewBox="0 0 24 24" class="h-6 w-6" fill="currentColor">
           <path d="M3 6h18M3 12h18M3 18h18" />
@@ -101,7 +97,6 @@ const daysArray = Object.values(groupedByDay) as any[];
 
     <div class="px-4 py-8">
       <div class="mx-auto max-w-2xl space-y-8">
-        <!-- Infos scène -->
         <div>
           <h1 class="mb-2 text-4xl font-black text-slate-900">
             {scene.nom}
@@ -113,7 +108,6 @@ const daysArray = Object.values(groupedByDay) as any[];
           )}
         </div>
 
-        <!-- Programme de la scène -->
         {daysArray.length > 0 && (
           <div>
             <h2 class="mb-6 text-2xl font-black text-slate-900">Programme</h2>
@@ -162,11 +156,9 @@ const daysArray = Object.values(groupedByDay) as any[];
           </div>
         )}
 
-        <!-- Infos Pratiques -->
         <div>
           <h2 class="mb-6 text-2xl font-black text-slate-900">Infos Pratiques</h2>
           
-          <!-- Tarifs -->
           <div class="mb-6 rounded-2xl bg-blue-400 p-6 text-white">
             <h3 class="mb-4 flex items-center gap-2 text-lg font-black">
               <svg viewBox="0 0 24 24" class="h-5 w-5" fill="currentColor">
@@ -191,7 +183,6 @@ const daysArray = Object.values(groupedByDay) as any[];
             </div>
           </div>
 
-          <!-- Hébergements -->
           <div class="mb-6 rounded-2xl bg-slate-100 p-6">
             <h3 class="mb-3 flex items-center gap-2 text-lg font-black text-slate-900">
               <svg viewBox="0 0 24 24" class="h-5 w-5" fill="currentColor">
@@ -207,7 +198,6 @@ const daysArray = Object.values(groupedByDay) as any[];
             </div>
           </div>
 
-          <!-- Transports -->
           <div class="rounded-2xl bg-slate-100 p-6 space-y-4">
             <h3 class="flex items-center gap-2 text-lg font-black text-slate-900">
               <svg viewBox="0 0 24 24" class="h-5 w-5" fill="currentColor">
@@ -239,7 +229,6 @@ const daysArray = Object.values(groupedByDay) as any[];
       </div>
     </div>
 
-    <!-- Barre de navigation en bas -->
     <nav class="fixed bottom-0 left-0 right-0 flex justify-around bg-white border-t border-slate-200 px-4 py-3">
       <a href="/" class="flex flex-col items-center gap-1 text-xs font-semibold text-slate-600 hover:text-slate-900">
         <svg viewBox="0 0 24 24" class="h-6 w-6" fill="none" stroke="currentColor" stroke-width="2">
@@ -326,4 +315,18 @@ const daysArray = Object.values(groupedByDay) as any[];
       });
     });
   </script>
+      <nav class="fixed bottom-0 left-0 right-0 flex justify-around bg-white border-t border-slate-200 px-4 py-3">
+      <a href="/" class="flex flex-col items-center gap-1 text-xs font-semibold text-slate-600 hover:text-slate-900">
+        Accueil
+      </a>
+      <a href="/artistes" class="flex flex-col items-center gap-1 text-xs font-semibold text-slate-600 hover:text-slate-900">
+        Artistes
+      </a>
+      <a href="/infos-pratiques" class="flex flex-col items-center gap-1 text-xs font-semibold text-[#4f9ef7]">
+        Infos Pratiques
+      </a>
+      <a href="/contact" class="flex flex-col items-center gap-1 text-xs font-semibold text-slate-600 hover:text-slate-900">
+        Contact
+      </a>
+    </nav>
 </Layout>

@@ -8,13 +8,11 @@ const allArtistes = await pb.collection('artistes').getFullList({
   sort: 'nom'
 });
 
-// Récupère tous les passages une seule fois
 const allProgrammes = await pb.collection('programme').getFullList({
   expand: 'artiste,scene',
   sort: 'date'
 });
 
-// Groupe les passages par artiste
 const passagesByArtiste = allProgrammes.reduce((acc: any, p: any) => {
   const artisteId = p.artiste;
   if (!acc[artisteId]) {
@@ -24,7 +22,6 @@ const passagesByArtiste = allProgrammes.reduce((acc: any, p: any) => {
   return acc;
 }, {});
 
-// Récupère les passages pour chaque artiste
 const artistesAvecPassages = await Promise.all(
   allArtistes.map(async (artiste: any) => {
     const passages = passagesByArtiste[artiste.id] || [];
@@ -71,13 +68,11 @@ function getTomorrowKey(): string {
 const searchQuery = Astro.url.searchParams.get('search') ?? '';
 
 let filteredArtistes = artistesAvecPassages.filter((artiste: any) => {
-  // Filtre par recherche
   const matchSearch = !searchQuery || artiste.nom.toLowerCase().includes(searchQuery.toLowerCase());
   
   return matchSearch;
 });
 
-// Filtre les artistes qui ont au moins un passage
 filteredArtistes = filteredArtistes.filter((artiste) => artiste.passages.length > 0);
 
 function getImageUrl(artiste: any): string | null {
@@ -99,7 +94,6 @@ function buildUrl(search: string, date: string): string {
 
 <Layout titre="Artistes">
   <main class="min-h-screen bg-[#a9c8f7] pb-24">
-    <!-- En-tête -->
     <section class="bg-linear-to-b from-[#a9c8f7] to-[#8eb3f0] px-4 py-4">
       <div class="flex items-center justify-between mb-4">
         <a href="/" class="text-slate-700">
@@ -115,7 +109,6 @@ function buildUrl(search: string, date: string): string {
         </button>
       </div>
 
-      <!-- Barre de recherche -->
       <form method="GET" class="mb-6">
         <div class="relative">
           <svg viewBox="0 0 24 24" class="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-600">
@@ -133,7 +126,6 @@ function buildUrl(search: string, date: string): string {
       </form>
     </section>
 
-    <!-- Liste des artistes -->
     <section class="px-4 py-6 space-y-4">
       {filteredArtistes.length === 0 ? (
         <div class="rounded-3xl bg-white p-8 text-center shadow-sm">
@@ -205,42 +197,6 @@ function buildUrl(search: string, date: string): string {
       )}
     </section>
 
-    <!-- Barre de navigation en bas -->
-    <nav class="fixed bottom-0 left-0 right-0 flex justify-around bg-white border-t border-slate-200 px-4 py-3">
-      <a href="/" class="flex flex-col items-center gap-1 text-xs font-semibold text-slate-600 hover:text-slate-900">
-        <svg viewBox="0 0 24 24" class="h-6 w-6" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
-          <polyline points="9 22 9 12 15 12 15 22" />
-        </svg>
-        Accueil
-      </a>
-      <a href="/artistes" class="flex flex-col items-center gap-1 text-xs font-semibold text-[#4f9ef7]">
-        <svg viewBox="0 0 24 24" class="h-6 w-6" fill="currentColor">
-          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
-          <circle cx="9" cy="7" r="4" />
-          <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
-          <path d="M16 3.13a4 4 0 0 1 0 7.75" />
-        </svg>
-        Artistes
-      </a>
-      <a href="/programme" class="flex flex-col items-center gap-1 text-xs font-semibold text-slate-600 hover:text-slate-900">
-        <svg viewBox="0 0 24 24" class="h-6 w-6" fill="none" stroke="currentColor" stroke-width="2">
-          <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
-          <line x1="16" y1="2" x2="16" y2="6" />
-          <line x1="8" y1="2" x2="8" y2="6" />
-          <line x1="3" y1="10" x2="21" y2="10" />
-        </svg>
-        Programme
-      </a>
-      <a href="/profil" class="flex flex-col items-center gap-1 text-xs font-semibold text-slate-600 hover:text-slate-900">
-        <svg viewBox="0 0 24 24" class="h-6 w-6" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-          <circle cx="12" cy="7" r="4" />
-        </svg>
-        Profil
-      </a>
-    </nav>
-  </main>
 
   <script>
     const storageKey = 'festival-favoris-artistes';
@@ -292,4 +248,18 @@ function buildUrl(search: string, date: string): string {
       });
     });
   </script>
+      <nav class="fixed bottom-0 left-0 right-0 flex justify-around bg-white border-t border-slate-200 px-4 py-3">
+      <a href="/" class="flex flex-col items-center gap-1 text-xs font-semibold text-slate-600 hover:text-slate-900">
+        Accueil
+      </a>
+      <a href="/artistes" class="flex flex-col items-center gap-1 text-xs font-semibold text-slate-600 hover:text-slate-900">
+        Artistes
+      </a>
+      <a href="/infos-pratiques" class="flex flex-col items-center gap-1 text-xs font-semibold text-[#4f9ef7]">
+        Infos Pratiques
+      </a>
+      <a href="/contact" class="flex flex-col items-center gap-1 text-xs font-semibold text-slate-600 hover:text-slate-900">
+        Contact
+      </a>
+    </nav>
 </Layout>
